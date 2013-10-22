@@ -56,36 +56,3 @@ int upper_power_of_2(int v) {
     v++;
     return v;
 }
-
-int main() {
-    Array arr = Array_init(4, 5);
-    Array_set(arr, 0, "helo"); 
-    Array_set(arr, 1, "chrs"); 
-    Array_set(arr, 2, "roey"); 
-    Array_set(arr, 3, "ches"); 
-    printf("%s\n", (char *) Array_get(arr, 0));
-    printf("%s\n", (char *) Array_get(arr, 1));
-    printf("%s\n", (char *) Array_get(arr, 2));
-    printf("%s\n", (char *) Array_get(arr, 3));
-
-    Array_append(arr, "five");
-    Array_append(arr, "sixx");
-    Array_append(arr, "sevn");
-    Array_append(arr, "eiht");
-    printf("%s\n", (char *) Array_get(arr, 4));
-    printf("%s\n", (char *) Array_get(arr, 5));
-    printf("%s\n", (char *) Array_get(arr, 6));
-    printf("%s\n", (char *) Array_get(arr, 7));
-
-    Array_free(arr);
-
-    Array arr2 = Array_init(0, 5);
-    Array_append(arr2, "what");
-    Array_append(arr2, "wutt");
-    printf("%s\n", (char *) Array_get(arr2, 0));
-    printf("%s\n", (char *) Array_get(arr2, 1));
-
-    Array_free(arr2);
-
-    return 0;
-}
