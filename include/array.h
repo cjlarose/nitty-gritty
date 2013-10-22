@@ -6,9 +6,7 @@ struct array {
     int length;         // current length of the virtual array
     int capacity;       // current length of real array
     void * start;       // ptr to start of real array
-};
-
-extern array;
+} array;
 
 typedef struct array * Array;
 
