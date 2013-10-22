@@ -41,6 +41,11 @@ void Array_append(Array arr, void * element) {
     Array_set(arr, arr->length - 1, element);
 }
 
+void Array_free(Array arr) {
+    free(arr->start);
+    free(arr);
+}
+
 int upper_power_of_2(int v) {
     v--;
     v |= v >> 1;
@@ -77,6 +82,7 @@ int main() {
     //Array_append(arr2, "wutt");
     //printf("%s\n", (char *) Array_get(arr, 0));
     //printf("%s\n", (char *) Array_get(arr, 1));
+    Array_free(arr);
 
     return 0;
 }

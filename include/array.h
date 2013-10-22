@@ -24,4 +24,6 @@ void Array_set(Array arr, int i, void * element);
 /* Add an element to the end of the array */
 void Array_append(Array arr, void * element);
 
+/* Free a dynamic array */
+void Array_free(Array arr);
 #endif
