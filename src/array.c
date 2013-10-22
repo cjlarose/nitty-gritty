@@ -28,8 +28,8 @@ void Array_set(Array arr, int i, void * element) {
 
 void _Array_resize(Array arr) {
     int new_capacity = arr->capacity * 2;
-    arr->start = realloc(arr->start, new_capacity);
-    memset(arr->start + arr->capacity, 0, arr->capacity);
+    arr->start = realloc(arr->start, new_capacity * arr->data_length);
+    memset(arr->start + arr->capacity, 0, arr->capacity * arr->data_length);
     arr->capacity = new_capacity;
 }
 
@@ -60,22 +60,22 @@ int upper_power_of_2(int v) {
 int main() {
     Array arr = Array_init(4, 5);
     Array_set(arr, 0, "helo"); 
-    //Array_set(arr, 1, "chrs"); 
-    //Array_set(arr, 2, "roey"); 
-    //Array_set(arr, 3, "ches"); 
+    Array_set(arr, 1, "chrs"); 
+    Array_set(arr, 2, "roey"); 
+    Array_set(arr, 3, "ches"); 
     printf("%s\n", (char *) Array_get(arr, 0));
-    //printf("%s\n", (char *) Array_get(arr, 1));
-    //printf("%s\n", (char *) Array_get(arr, 2));
-    //printf("%s\n", (char *) Array_get(arr, 3));
+    printf("%s\n", (char *) Array_get(arr, 1));
+    printf("%s\n", (char *) Array_get(arr, 2));
+    printf("%s\n", (char *) Array_get(arr, 3));
 
-    //Array_append(arr, "five");
-    //Array_append(arr, "sixx");
-    //Array_append(arr, "sevn");
-    //Array_append(arr, "eiht");
-    //printf("%s\n", (char *) Array_get(arr, 4));
-    //printf("%s\n", (char *) Array_get(arr, 5));
-    //printf("%s\n", (char *) Array_get(arr, 6));
-    //printf("%s\n", (char *) Array_get(arr, 7));
+    Array_append(arr, "five");
+    Array_append(arr, "sixx");
+    Array_append(arr, "sevn");
+    Array_append(arr, "eiht");
+    printf("%s\n", (char *) Array_get(arr, 4));
+    printf("%s\n", (char *) Array_get(arr, 5));
+    printf("%s\n", (char *) Array_get(arr, 6));
+    printf("%s\n", (char *) Array_get(arr, 7));
 
     //Array arr2 = Array_init(0, 5);
     //Array_append(arr2, "what");
