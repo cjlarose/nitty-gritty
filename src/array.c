@@ -77,12 +77,15 @@ int main() {
     printf("%s\n", (char *) Array_get(arr, 6));
     printf("%s\n", (char *) Array_get(arr, 7));
 
-    //Array arr2 = Array_init(0, 5);
-    //Array_append(arr2, "what");
-    //Array_append(arr2, "wutt");
-    //printf("%s\n", (char *) Array_get(arr, 0));
-    //printf("%s\n", (char *) Array_get(arr, 1));
     Array_free(arr);
+
+    Array arr2 = Array_init(0, 5);
+    Array_append(arr2, "what");
+    Array_append(arr2, "wutt");
+    printf("%s\n", (char *) Array_get(arr2, 0));
+    printf("%s\n", (char *) Array_get(arr2, 1));
+
+    Array_free(arr2);
 
     return 0;
 }
