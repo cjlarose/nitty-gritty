@@ -38,8 +38,8 @@ char * test_init_with_0() {
     arr2 = Array_init(0, 5);
     Array_append(arr2, "what");
     Array_append(arr2, "wutt");
-    mu_assert(ARRAY_ELEMENT_EQ(arr1, 0, "what"), "Wrong value");
-    mu_assert(ARRAY_ELEMENT_EQ(arr1, 1, "wutt"), "Wrong value");
+    mu_assert(ARRAY_ELEMENT_EQ(arr2, 0, "what"), "Wrong value");
+    mu_assert(ARRAY_ELEMENT_EQ(arr2, 1, "wutt"), "Wrong value");
 
     Array_free(arr2);
     return NULL;
@@ -49,7 +49,7 @@ char * all_tests() {
     mu_suite_start();
     mu_run_test(test_set_get);
     mu_run_test(test_append);
-    //mu_run_test(test_init_with_0);
+    mu_run_test(test_init_with_0);
     return NULL;
 }
 
