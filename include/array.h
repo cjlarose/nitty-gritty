@@ -8,6 +8,8 @@ struct array {
     void * start;       // ptr to start of real array
 };
 
+extern array;
+
 typedef struct array * Array;
 
 /* Initialize a dynamic array that stores elements of size data_length */
@@ -21,4 +23,5 @@ void Array_set(Array arr, int i, void * element);
 
 /* Add an element to the end of the array */
 void Array_append(Array arr, void * element);
+
 #endif
