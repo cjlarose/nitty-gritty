@@ -5,6 +5,8 @@
 #include "map.h"
 #include "minunit.h"
 
+#define TABLE_EQ(table, key, value) (strcmp((char *) *(map_find(table, key)), value) == 0)
+
 unsigned long long int str_hash(void *ptr) {
     char *str = (char *) ptr;
     long int h = 0;  
@@ -31,6 +33,7 @@ char **args = NULL;
 
 char * test_init() {
     my_map = map_new(&str_hash, &str_eq, 4);
+    mu_assert(my_map->size == 4, "Incorrect size");
     return NULL;
 }
 
@@ -57,13 +60,11 @@ char * test_insert_alpha() {
 }
 
 char * test_find() {
-    char *keys[] = {"one", "three", "five", "seven", "nine"};
-
-    int i;
-    for (i = 0; i < 5; i++) {
-        char *value = (char *) *(map_find(my_map, keys[i]));
-        printf("%s\n", value);
-    }
+    mu_assert(TABLE_EQ(my_map, "one", "two"), "Wrong value");
+    mu_assert(TABLE_EQ(my_map, "three", "four"), "Wrong value");
+    mu_assert(TABLE_EQ(my_map, "five", "six"), "Wrong value");
+    mu_assert(TABLE_EQ(my_map, "seven", "eight"), "Wrong value");
+    mu_assert(TABLE_EQ(my_map, "nine", "potato"), "Wrong value");
     return NULL;
 }
 
