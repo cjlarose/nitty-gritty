@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "array.h"
+#include "utils.h"
 #define INITIAL_CAPACITY 4
 
 Array *Array_init(int length, size_t data_length) {
@@ -44,15 +45,4 @@ void Array_append(Array *arr, void * element) {
 void Array_free(Array *arr) {
     free(arr->start);
     free(arr);
-}
-
-int upper_power_of_2(int v) {
-    v--;
-    v |= v >> 1;
-    v |= v >> 2;
-    v |= v >> 4;
-    v |= v >> 8;
-    v |= v >> 16;
-    v++;
-    return v;
 }
