@@ -1,5 +1,5 @@
-#ifndef ARRAY
-#define ARRAY
+#ifndef _ARRAY_H_
+#define _ARRAY_H_
 #include <stdlib.h>
 typedef struct Array {
     size_t data_length; // size in bytes of single element
