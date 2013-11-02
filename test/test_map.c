@@ -64,7 +64,7 @@ char * test_find() {
     mu_assert(TABLE_EQ(my_map, "three", "four"), "Wrong value");
     mu_assert(TABLE_EQ(my_map, "five", "six"), "Wrong value");
     mu_assert(TABLE_EQ(my_map, "seven", "eight"), "Wrong value");
-    mu_assert(TABLE_EQ(my_map, "nine", "potato"), "Wrong value");
+    mu_assert(TABLE_EQ(my_map, "nine", "ten"), "Wrong value");
     return NULL;
 }
 

@@ -13,21 +13,26 @@
  */
 
 /* 
- * map_new(hash_fn, key_eq, size) initializes a new map.  hash_fn must take
+ * map_init(hash_fn, key_eq, size) initializes a new map.  hash_fn must take
  * a pointer to a key and return the hash of that key.  key_eq must take two
  * keys and return true iff the two keys should be considered equal. The map
  * will initialize have size size, but will dynamically increase as 
  * necessary.
  */
-struct map *map_new(hash_fn hash_fn, bool(*key_eq)(void *, void *), 
+void map_init(struct map* new_map, hash_fn hash_fn, bool(*key_eq)(void *, void *), 
     int initial_size) {
-    struct map *new_map = smalloc(sizeof(struct map));
     new_map->hash_fn = hash_fn;
     new_map->key_eq = key_eq;
     new_map->entries = scalloc(initial_size, sizeof(struct linked_list *));
     new_map->size = initial_size;
     new_map->m = initial_size;
     new_map->split_index = 0;
+}
+
+struct map *map_new(hash_fn hash_fn, bool(*key_eq)(void *, void *), 
+    int initial_size) {
+    struct map *new_map = smalloc(sizeof(struct map));
+    map_init(new_map, hash_fn, key_eq, initial_size);
     return new_map;
 }
 

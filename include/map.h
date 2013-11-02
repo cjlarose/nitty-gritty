@@ -18,6 +18,7 @@ struct map {
     int split_index;
 };
 
+void map_init(struct map *map, hash_fn hash_fn, bool(*key_eq)(void *, void *), int initial_size);
 struct map *map_new(hash_fn hash_fn, bool(*key_eq)(void *, void *), int initial_size);
 
 void map_insert(struct map *map, void *key, void *val);
