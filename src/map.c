@@ -51,8 +51,8 @@ bool _map_set(struct map *map, int index, struct map_node *node, bool *collision
     struct linked_list *keys = map->entries[index];
     if (keys == NULL)
         collision_occured = false;
-    //else if (_map_find_in_nodes(map, keys, node->key) != NULL)
-        //return false;
+    else if (_map_find_in_nodes(map, keys, node->key) != NULL)
+        return false;
 
     if (collision != NULL)
         *collision = collision_occured;
