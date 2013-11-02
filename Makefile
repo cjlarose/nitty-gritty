@@ -16,6 +16,9 @@ OBJECTS = $(patsubst $(SRC_DIR)/%,$(BUILD_DIR)/%,$(SOURCES:.$(SRC_EXT)=.o))
 CFLAGS = -g -Wall
 INC = -I include
 
+.PHONY: all
+all: $(OBJECTS)
+
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.$(SRC_EXT)
 	mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
