@@ -36,11 +36,11 @@ struct map *map_new(hash_fn hash_fn, bool(*key_eq)(void *, void *),
     return new_map;
 }
 
-void **_map_find_in_nodes(struct map *map, struct linked_list *list_node, void *key) {
+struct map_node *_map_find_in_nodes(struct map *map, struct linked_list *list_node, void *key) {
     for (; list_node != NULL; list_node = list_node->next) {
         struct map_node *node = (struct map_node *) list_node->datum;
         if (map->key_eq(node->key, key))
-            return &node->value;
+            return node;
     }
     return NULL;
 }
@@ -54,10 +54,14 @@ void **_map_find_in_nodes(struct map *map, struct linked_list *list_node, void *
 bool _map_set(struct map *map, int index, struct map_node *node, bool *collision) {
     bool collision_occured = true;
     struct linked_list *keys = map->entries[index];
+    struct map_node *existing_node;
+    
     if (keys == NULL)
         collision_occured = false;
-    else if (_map_find_in_nodes(map, keys, node->key) != NULL)
+    else if ((existing_node = _map_find_in_nodes(map, keys, node->key)) != NULL) {
+        existing_node->value = node->value;
         return false;
+    }
 
     if (collision != NULL)
         *collision = collision_occured;
@@ -141,8 +145,10 @@ void **map_find(struct map *map, void *key) {
         index = hash % (map->m << 1);
 
     struct linked_list *keys = map->entries[index];
+    struct map_node *node;
     if (keys != NULL)
-        return _map_find_in_nodes(map, keys, key);
+        if ((node = _map_find_in_nodes(map, keys, key)) != NULL)
+            return &node->value;
     return NULL;
 }
 
