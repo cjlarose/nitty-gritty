@@ -73,6 +73,23 @@ char * test_apply() {
     return NULL;
 }
 
+char * test_remove() {
+    struct map* map = map_new(&str_hash, &str_eq, 4);
+    map_insert(map, "one", "1");
+    map_insert(map, "two", "2");
+    map_insert(map, "three", "3");
+
+    map_delete(map, "one", NULL);
+    map_delete(map, "two", NULL);
+
+    mu_assert(map_find(map, "one") == NULL, "One not deleted");
+    mu_assert(map_find(map, "two") == NULL, "Two not deleted");
+    mu_assert(map_find(map, "three") != NULL, "Three deleted");
+
+    map_free(map, NULL);
+    return NULL;
+}
+
 char *all_tests() {
     mu_suite_start();
     mu_run_test(test_init);
@@ -80,6 +97,7 @@ char *all_tests() {
     mu_run_test(test_insert_alpha);
     mu_run_test(test_find);
     mu_run_test(test_apply);
+    mu_run_test(test_remove);
 
     map_free(my_map, NULL);
 
