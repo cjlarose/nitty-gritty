@@ -4,6 +4,7 @@
 
 static Array *arr1 = NULL;
 static Array *arr2 = NULL;
+static Array *arr3 = NULL;
 
 #define ARRAY_ELEMENT_EQ(arr, index, string) strcmp((char *) Array_get(arr, index), string) == 0
 
@@ -53,11 +54,28 @@ char * test_init_with_0() {
     return NULL;
 }
 
+char * str_test() {
+    arr3 = Array_init(0, sizeof(char *));
+    char *str1 = "foofoofoofoofoo";
+    char *str2 = "bar";
+    Array_append(arr3, &str1);
+    Array_append(arr3, &str2);
+
+    mu_assert(arr3->length == 2, "Wrong size");
+    
+    mu_assert(*((char **) Array_get(arr3, 0)) == str1, "Wrong value for arr[0]");
+    mu_assert(*((char **) Array_get(arr3, 1)) == str2, "Wrong value for arr[1]");
+
+    Array_free(arr3);
+    return NULL;
+}
+
 char * all_tests() {
     mu_suite_start();
     mu_run_test(test_set_get);
     mu_run_test(test_append);
     mu_run_test(test_init_with_0);
+    mu_run_test(str_test);
     return NULL;
 }
 
