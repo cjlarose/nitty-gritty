@@ -70,12 +70,27 @@ char * str_test() {
     return NULL;
 }
 
+char * resize_test() {
+    Array *arr4 = Array_init(0, sizeof(char *)); // actually 4 elements
+    char *str1 = "foo";
+    int i;
+    for (i = 0; i < 25; i++)
+        Array_append(arr4, &str1);
+
+    mu_assert(arr4->length == 25, "Wrong size");
+
+    for (i = 0; i < 25; i++)
+        mu_assert(*((char **) Array_get(arr4, i)) == str1, "Wrong value");
+    return NULL;
+}
+
 char * all_tests() {
     mu_suite_start();
     mu_run_test(test_set_get);
     mu_run_test(test_append);
     mu_run_test(test_init_with_0);
     mu_run_test(str_test);
+    mu_run_test(resize_test);
     return NULL;
 }
 

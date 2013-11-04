@@ -30,7 +30,7 @@ void Array_set(Array *arr, int i, void * element) {
 void _Array_resize(Array *arr) {
     int new_capacity = arr->capacity * 2;
     arr->start = realloc(arr->start, new_capacity * arr->data_length);
-    memset(arr->start + arr->capacity, 0, arr->capacity * arr->data_length);
+    memset(arr->start + arr->capacity * arr->data_length, 0, arr->capacity * arr->data_length);
     arr->capacity = new_capacity;
 }
 
