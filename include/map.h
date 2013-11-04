@@ -24,6 +24,7 @@ struct map *map_new(hash_fn hash_fn, bool(*key_eq)(void *, void *), int initial_
 void map_insert(struct map *map, void *key, void *val);
 
 void **map_find(struct map *map, void *key);
+bool map_delete(struct map *map, void *key, void(*free_fn)(void *, void*));
 
 void map_free(struct map *map, void(*free_fn)(void *, void *));
 

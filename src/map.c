@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "map.h"
 #include "linked_list.h"
 #include "utils.h"
@@ -112,16 +111,20 @@ struct map_node *map_node_new(void *key, void *value) {
     return node;
 }
 
+int _map_index_at_key(struct map *map, void *key) {
+    unsigned long long int hash = map->hash_fn(key);
+    int index = hash % map->m;
+    if (index < map->split_index)
+        index = hash % (map->m << 1);
+    return index;
+}
+
 /*
  * map_insert(map, k, v) associates a given key in a map with a value v. If 
  * there is already a value defined for that key, the value is overwritten. 
  */
 void map_insert(struct map *map, void *key, void *val) {
-    unsigned long long int hash = map->hash_fn(key);
-    int index = hash % map->m;
-    if (index < map->split_index)
-        index = hash % (map->m << 1);
-
+    int index = _map_index_at_key(map, key);
     bool collision;
     struct map_node *node = map_node_new(key, val);
     if (_map_set(map, index, node, &collision)) {
@@ -139,17 +142,39 @@ void map_insert(struct map *map, void *key, void *val) {
 }
 
 void **map_find(struct map *map, void *key) {
-    unsigned long long int hash = map->hash_fn(key);
-    int index = hash % map->m;
-    if (index < map->split_index)
-        index = hash % (map->m << 1);
-
+    int index = _map_index_at_key(map, key);
     struct linked_list *keys = map->entries[index];
     struct map_node *node;
     if (keys != NULL)
         if ((node = _map_find_in_nodes(map, keys, key)) != NULL)
             return &node->value;
     return NULL;
+}
+
+/*
+ * Given a key, remove the associated value 
+ */
+bool map_delete(struct map *map, void *key, void(*free_fn)(void *, void *)) {
+    int index = _map_index_at_key(map, key);
+    struct linked_list *keys = map->entries[index];
+    bool found = false;
+    if (keys) {
+        bool eq_by_key(void *datum) {
+            struct map_node *entry = datum;
+            return map->key_eq(entry->key, key);
+        }
+        struct linked_list *node = list_find(keys, &eq_by_key);
+        if (node) {
+            struct map_node *map_node = node->datum;
+            if (free_fn != NULL)
+                free_fn(map_node->key, map_node->value);
+            free(map_node);
+            list_remove(&keys, node);
+            map->entries[index] = keys;
+            found = true;
+        }
+    }
+    return found;
 }
 
 void map_free(struct map *map, void(*free_fn)(void *, void *)) {
