@@ -192,7 +192,6 @@ void map_free(struct map *map, void(*free_fn)(void *, void *)) {
         }
     }
     free(map->entries);
-    free(map);    
 }
 
 void map_apply(struct map *map, void(*fn)(void *, void **)) {

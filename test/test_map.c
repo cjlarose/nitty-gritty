@@ -87,6 +87,7 @@ char * test_remove() {
     mu_assert(map_find(map, "three") != NULL, "Three deleted");
 
     map_free(map, NULL);
+    free(map);
     return NULL;
 }
 
@@ -100,11 +101,13 @@ char *all_tests() {
     mu_run_test(test_remove);
 
     map_free(my_map, NULL);
+    free(my_map);
 
     int j;
     for (j = 0; j < 26; j++)
         free(args[j]);
     free(args);
+
     return NULL;
 }
 
