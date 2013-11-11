@@ -28,5 +28,5 @@ bool map_delete(struct map *map, void *key, void(*free_fn)(void *, void*));
 
 void map_free(struct map *map, void(*free_fn)(void *, void *));
 
-void map_apply(struct map *map, void(*fn)(void *, void **));
+void map_apply(struct map *map, void(*fn)(void *k, void **v, void *info), void *info);
 #endif

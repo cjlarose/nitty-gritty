@@ -24,7 +24,7 @@ bool str_eq(void *ptr1, void *ptr2) {
     return strcmp((char *) ptr1, (char *) ptr2) == 0;
 }
 
-void print_kv(void *ptr1, void **ptr2) {
+void print_kv(void *ptr1, void **ptr2, void *info) {
     printf("%s => %s\n", (char *) ptr1, (char *) *ptr2);
 }
 
@@ -69,7 +69,7 @@ char * test_find() {
 }
 
 char * test_apply() {
-    map_apply(my_map, &print_kv);
+    map_apply(my_map, &print_kv, NULL);
     return NULL;
 }
 

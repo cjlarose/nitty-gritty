@@ -204,13 +204,13 @@ void map_free(struct map *map, void(*free_fn)(void *, void *)) {
     free(map->entries);
 }
 
-void map_apply(struct map *map, void(*fn)(void *, void **)) {
+void map_apply(struct map *map, void(*fn)(void *, void **, void *), void *info) {
     int i;
     for (i = 0; i < map->size; i++) {
         struct linked_list *list_nodes = map->entries[i];
         for (; list_nodes != NULL; list_nodes = list_nodes->next) {
             struct map_node *map_node = (struct map_node *) list_nodes->datum;
-            fn(map_node->key, &map_node->value);
+            fn(map_node->key, &map_node->value, info);
         }
     }
 }
