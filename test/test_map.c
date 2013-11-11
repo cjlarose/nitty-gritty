@@ -28,7 +28,7 @@ void print_kv(void *ptr1, void **ptr2, void *info) {
     printf("%s => %s\n", (char *) ptr1, (char *) *ptr2);
 }
 
-struct map *my_map = NULL;
+Map *my_map = NULL;
 char **args = NULL;
 
 char * test_init() {
@@ -74,7 +74,7 @@ char * test_apply() {
 }
 
 char * test_remove() {
-    struct map* map = map_new(&str_hash, &str_eq, 4);
+    Map* map = map_new(&str_hash, &str_eq, 4);
     map_insert(map, "one", "1");
     map_insert(map, "two", "2");
     map_insert(map, "three", "3");

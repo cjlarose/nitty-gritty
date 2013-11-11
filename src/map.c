@@ -18,7 +18,7 @@
  * will initialize have size size, but will dynamically increase as 
  * necessary.
  */
-void map_init(struct map* new_map, hash_fn hash_fn, bool(*key_eq)(void *, void *), 
+void map_init(Map* new_map, hash_fn hash_fn, bool(*key_eq)(void *, void *), 
     int initial_size) {
     new_map->hash_fn = hash_fn;
     new_map->key_eq = key_eq;
@@ -28,16 +28,16 @@ void map_init(struct map* new_map, hash_fn hash_fn, bool(*key_eq)(void *, void *
     new_map->split_index = 0;
 }
 
-struct map *map_new(hash_fn hash_fn, bool(*key_eq)(void *, void *), 
+Map *map_new(hash_fn hash_fn, bool(*key_eq)(void *, void *), 
     int initial_size) {
-    struct map *new_map = smalloc(sizeof(struct map));
+    Map *new_map = smalloc(sizeof(Map));
     map_init(new_map, hash_fn, key_eq, initial_size);
     return new_map;
 }
 
-struct map_node *_map_find_in_nodes(struct map *map, struct linked_list *list_node, void *key) {
+MapNode *_map_find_in_nodes(Map *map, struct linked_list *list_node, void *key) {
     for (; list_node != NULL; list_node = list_node->next) {
-        struct map_node *node = (struct map_node *) list_node->datum;
+        MapNode *node = (MapNode *) list_node->datum;
         if (map->key_eq(node->key, key))
             return node;
     }
@@ -50,10 +50,10 @@ struct map_node *_map_find_in_nodes(struct map *map, struct linked_list *list_no
  * wasn't already defined).  Sets the value of collision to true iff a collsion
  * occured during insertion.
  */
-bool _map_set(struct map *map, int index, struct map_node *node, bool *collision) {
+bool _map_set(Map *map, int index, MapNode *node, bool *collision) {
     bool collision_occured = true;
     struct linked_list *keys = map->entries[index];
-    struct map_node *existing_node;
+    MapNode *existing_node;
     
     if (keys == NULL)
         collision_occured = false;
@@ -74,7 +74,7 @@ bool _map_set(struct map *map, int index, struct map_node *node, bool *collision
  * it is less than capacity. Shamelessly uses realloc against Dr. Debray's
  * coding standards.
  */
-void _map_ensure_capacity(struct map *map, int capacity) {
+void _map_ensure_capacity(Map *map, int capacity) {
     int i, new_size;
     if (map->size < capacity) {
         new_size = map->size * 2;
@@ -92,26 +92,26 @@ void _map_ensure_capacity(struct map *map, int capacity) {
  * map_rehash_keys(map, i, m) will rehash all the keys at index i using
  * modulus m
  */
-void _map_rehash_keys(struct map *map, int index, int m) {
+void _map_rehash_keys(Map *map, int index, int m) {
     struct linked_list *keys = map->entries[index];
     map->entries[index] = NULL;
     struct linked_list *next;
     for(; keys != NULL; keys = next) {
         next = keys->next;
-        struct map_node *node = (struct map_node *) keys->datum;
+        MapNode *node = (MapNode *) keys->datum;
         _map_set(map, map->hash_fn(node->key) % m, node, NULL);
         free(keys);
     }
 }
 
-struct map_node *map_node_new(void *key, void *value) {
-    struct map_node *node = smalloc(sizeof(struct map_node));
+MapNode *map_node_new(void *key, void *value) {
+    MapNode *node = smalloc(sizeof(MapNode));
     node->key = key;
     node->value = value;
     return node;
 }
 
-int _map_index_at_key(struct map *map, void *key) {
+int _map_index_at_key(Map *map, void *key) {
     unsigned long long int hash = map->hash_fn(key);
     int index = hash % map->m;
     if (index < map->split_index)
@@ -123,10 +123,10 @@ int _map_index_at_key(struct map *map, void *key) {
  * map_insert(map, k, v) associates a given key in a map with a value v. If 
  * there is already a value defined for that key, the value is overwritten. 
  */
-void map_insert(struct map *map, void *key, void *val) {
+void map_insert(Map *map, void *key, void *val) {
     int index = _map_index_at_key(map, key);
     bool collision;
-    struct map_node *node = map_node_new(key, val);
+    MapNode *node = map_node_new(key, val);
     if (_map_set(map, index, node, &collision)) {
         if (collision) {
             _map_ensure_capacity(map, map->m + map->split_index + 1);
@@ -141,10 +141,10 @@ void map_insert(struct map *map, void *key, void *val) {
         free(node);
 }
 
-void **map_find(struct map *map, void *key) {
+void **map_find(Map *map, void *key) {
     int index = _map_index_at_key(map, key);
     struct linked_list *keys = map->entries[index];
-    struct map_node *node;
+    MapNode *node;
     if (keys != NULL)
         if ((node = _map_find_in_nodes(map, keys, key)) != NULL)
             return &node->value;
@@ -152,12 +152,12 @@ void **map_find(struct map *map, void *key) {
 }
 
 struct find_context {
-    struct map *map;
+    Map *map;
     void *key;
 };
 
 bool _eq_by_key(void *datum, void *find_struct) {
-    struct map_node *entry = datum;
+    MapNode *entry = datum;
     struct find_context *info = (struct find_context *) find_struct;
     return info->map->key_eq(entry->key, info->key);
 }
@@ -165,7 +165,7 @@ bool _eq_by_key(void *datum, void *find_struct) {
 /*
  * Given a key, remove the associated value 
  */
-bool map_delete(struct map *map, void *key, void(*free_fn)(void *, void *)) {
+bool map_delete(Map *map, void *key, void(*free_fn)(void *, void *)) {
     int index = _map_index_at_key(map, key);
     struct linked_list *keys = map->entries[index];
     bool found = false;
@@ -175,7 +175,7 @@ bool map_delete(struct map *map, void *key, void(*free_fn)(void *, void *)) {
         info.key = key;
         struct linked_list *node = list_find(keys, &_eq_by_key, &info);
         if (node) {
-            struct map_node *map_node = node->datum;
+            MapNode *map_node = node->datum;
             if (free_fn != NULL)
                 free_fn(map_node->key, map_node->value);
             free(map_node);
@@ -187,13 +187,13 @@ bool map_delete(struct map *map, void *key, void(*free_fn)(void *, void *)) {
     return found;
 }
 
-void map_free(struct map *map, void(*free_fn)(void *, void *)) {
+void map_free(Map *map, void(*free_fn)(void *, void *)) {
     int i;
     struct linked_list *next;
     for (i = 0; i < map->size; i++) {
         struct linked_list *list_nodes = map->entries[i];
         for (; list_nodes != NULL; list_nodes = next) {
-            struct map_node *map_node = (struct map_node *) list_nodes->datum;
+            MapNode *map_node = (MapNode *) list_nodes->datum;
             if (free_fn != NULL)
                 free_fn(map_node->key, map_node->value);
             free(map_node);
@@ -204,12 +204,12 @@ void map_free(struct map *map, void(*free_fn)(void *, void *)) {
     free(map->entries);
 }
 
-void map_apply(struct map *map, void(*fn)(void *, void **, void *), void *info) {
+void map_apply(Map *map, void(*fn)(void *, void **, void *), void *info) {
     int i;
     for (i = 0; i < map->size; i++) {
         struct linked_list *list_nodes = map->entries[i];
         for (; list_nodes != NULL; list_nodes = list_nodes->next) {
-            struct map_node *map_node = (struct map_node *) list_nodes->datum;
+            MapNode *map_node = (MapNode *) list_nodes->datum;
             fn(map_node->key, &map_node->value, info);
         }
     }
