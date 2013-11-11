@@ -16,7 +16,7 @@ void list_remove(struct linked_list **list, struct linked_list *node);
 
 void *list_sort(struct linked_list *list, int(*cmp)(void *, void *));
 
-struct linked_list *list_find(struct linked_list *list, bool(*eq)(void *));
+struct linked_list *list_find(struct linked_list *list, bool(*eq)(void *, void *), void *info);
 
 int list_length(struct linked_list *list);
 

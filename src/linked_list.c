@@ -60,10 +60,10 @@ void *list_sort(struct linked_list *list, int(*cmp)(void *, void *)) {
     return NULL;
 }
 
-struct linked_list *list_find(struct linked_list *list, bool(*eq)(void *)) {
+struct linked_list *list_find(struct linked_list *list, bool(*eq)(void *, void *), void *info) {
     struct linked_list *ptr = list;
     for (; ptr != NULL; ptr = ptr->next)
-        if (eq(ptr->datum))
+        if (eq(ptr->datum, info))
             return ptr;
     return NULL;
 }

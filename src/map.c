@@ -151,6 +151,17 @@ void **map_find(struct map *map, void *key) {
     return NULL;
 }
 
+struct find_context {
+    struct map *map;
+    void *key;
+};
+
+bool _eq_by_key(void *datum, void *find_struct) {
+    struct map_node *entry = datum;
+    struct find_context *info = (struct find_context *) find_struct;
+    return info->map->key_eq(entry->key, info->key);
+}
+
 /*
  * Given a key, remove the associated value 
  */
@@ -159,11 +170,10 @@ bool map_delete(struct map *map, void *key, void(*free_fn)(void *, void *)) {
     struct linked_list *keys = map->entries[index];
     bool found = false;
     if (keys) {
-        bool eq_by_key(void *datum) {
-            struct map_node *entry = datum;
-            return map->key_eq(entry->key, key);
-        }
-        struct linked_list *node = list_find(keys, &eq_by_key);
+        struct find_context info;
+        info.map = map;
+        info.key = key;
+        struct linked_list *node = list_find(keys, &_eq_by_key, &info);
         if (node) {
             struct map_node *map_node = node->datum;
             if (free_fn != NULL)
