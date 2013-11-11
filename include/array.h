@@ -9,17 +9,18 @@ typedef struct Array {
 } Array;
 
 /* Initialize a dynamic array that stores elements of size data_length */
-Array *Array_init(int length, size_t data_length);
+void array_init(Array * arr, int length, size_t data_length);
+Array *array_new(int length, size_t data_length);
 
 /* Return the contents at index i */
-void *Array_get(Array *arr, int i);
+void *array_get(Array *arr, int i);
 
 /* Set the contents at index i to element */
-void Array_set(Array *arr, int i, void * element);
+void array_set(Array *arr, int i, void * element);
 
 /* Add an element to the end of the array */
-void Array_append(Array *arr, void * element);
+void array_append(Array *arr, void * element);
 
 /* Free a dynamic array */
-void Array_free(Array *arr);
+void array_free(Array *arr);
 #endif
