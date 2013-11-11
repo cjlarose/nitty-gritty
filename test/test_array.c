@@ -84,6 +84,9 @@ char * resize_test() {
 
     for (i = 0; i < 25; i++)
         mu_assert(*((char **) array_get(arr4, i)) == str1, "Wrong value");
+
+    array_free(arr4);
+    free(arr4);
     return NULL;
 }
 
