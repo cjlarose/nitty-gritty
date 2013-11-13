@@ -31,7 +31,7 @@ void array_set(Array *arr, int i, void * element) {
     memcpy(pos, element, arr->data_length);
 }
 
-void _array_resize(Array *arr) {
+void array_resize(Array *arr) {
     int new_capacity = arr->capacity * 2;
     arr->start = realloc(arr->start, new_capacity * arr->data_length);
     memset(arr->start + arr->capacity * arr->data_length, 0, arr->capacity * arr->data_length);
@@ -41,7 +41,7 @@ void _array_resize(Array *arr) {
 void array_append(Array *arr, void * element) {
     assert(arr != NULL);
     if (arr->length == arr->capacity)
-        _array_resize(arr);
+        array_resize(arr);
     arr->length++;
     array_set(arr, arr->length - 1, element);
 }
