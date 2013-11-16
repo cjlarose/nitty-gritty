@@ -11,6 +11,14 @@
  * Paul Larson. 
  */
 
+unsigned long long int identity_hash(void *key) {
+    return (unsigned long long int) key;
+}
+
+bool reference_eq(void * k1, void *k2) {
+    return k1 == k2;
+}
+
 /* 
  * map_init(hash_fn, key_eq, size) initializes a new map.  hash_fn must take
  * a pointer to a key and return the hash of that key.  key_eq must take two
@@ -20,8 +28,8 @@
  */
 void map_init(Map* new_map, hash_fn hash_fn, bool(*key_eq)(void *, void *), 
     int initial_size) {
-    new_map->hash_fn = hash_fn;
-    new_map->key_eq = key_eq;
+    new_map->hash_fn = hash_fn ? hash_fn : &identity_hash;
+    new_map->key_eq = key_eq ? key_eq : &reference_eq;
     new_map->entries = scalloc(initial_size, sizeof(struct linked_list *));
     new_map->size = initial_size;
     new_map->m = initial_size;

@@ -91,6 +91,23 @@ char * test_remove() {
     return NULL;
 }
 
+char * test_reference_equality() {
+    Map* map = map_new(NULL, NULL, 4);
+    char *s1 = strdup("HELLO");
+    char *s2 = strdup("HELLO");
+    map_insert(map, s1, "one");
+    map_insert(map, s2, "two");
+
+    mu_assert(map_find(map, s1) == map_find(map, s1), "Reference eq failed");
+    mu_assert(map_find(map, s1) != map_find(map, s2), "Reference eq failed");
+
+    map_free(map, NULL);
+    free(s1);
+    free(s2);
+    free(map);
+    return NULL;
+}
+
 char *all_tests() {
     mu_suite_start();
     mu_run_test(test_init);
@@ -99,6 +116,7 @@ char *all_tests() {
     mu_run_test(test_find);
     mu_run_test(test_apply);
     mu_run_test(test_remove);
+    mu_run_test(test_reference_equality);
 
     map_free(my_map, NULL);
     free(my_map);
